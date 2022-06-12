@@ -140,7 +140,13 @@ function findPaleMatchPlancha (numeroMaximoPlanchas, pale, plancha) {
   }
 }
 
-PALES_LIST.map(({ area, ...pale }) => {
+// .map -> es un for each pero retorna una copia de los datos actualizados dentro
+// .forEach -> a diferencia de map no retorna nada
+
+// los tres puntitos son las propiedades que sobran
+// area -> no se incluye en los ... porque se ha substraido al nombrarlo  antes de la invocacion ...
+// orientacion // cantidad // base // altura
+const resultado = PALES_LIST.map(({ area, ...pale }) => {
   const numeroMaximoPlanchas = parseInt(area / areaPlanchaUsuario)
 
   const match = findPaleMatchPlancha(numeroMaximoPlanchas, pale, planchaUsuario)
@@ -150,9 +156,17 @@ PALES_LIST.map(({ area, ...pale }) => {
     planchaUsuario
   )
 
-  return match.cantidadPlanchas >= matchPaleInvertido.cantidadPlanchas
-    ? match
-    : matchPaleInvertido
+  const res =
+    match.cantidadPlanchas >= matchPaleInvertido.cantidadPlanchas
+      ? match
+      : matchPaleInvertido
+  return {
+    ...res,
+    cantidadPlanchas:
+      res.orientacion === ORIENTACION_TYPES.cuadrado
+        ? res.cantidadPlanchas * res.cantidadPlanchas
+        : res.cantidadPlanchas
+  }
 })
 
-console.log(PALES_LIST)
+console.log(resultado)
